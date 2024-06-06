@@ -1,0 +1,30 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Refund {
+  amount          Int?
+  createdAt       DateTime       @default(now())
+  id              String         @id @default(cuid())
+  paymentIntent   PaymentIntent? @relation(fields: [paymentIntentId], references: [id])
+  paymentIntentId String?
+  status          String?
+  updatedAt       DateTime       @updatedAt
+}
+
+model PaymentIntent {
+  amount        Int?
+  createdAt     DateTime @default(now())
+  currency      String?
+  customerId    String?
+  id            String   @id @default(cuid())
+  paymentMethod String?
+  refunds       Refund[]
+  status        String?
+  updatedAt     DateTime @updatedAt
+}
